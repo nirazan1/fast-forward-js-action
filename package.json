@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -19,8 +20,13 @@
   "homepage": "https://github.com/endre-spotlab/fast-forward-js-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^2.1.0",
-    "@octokit/rest": "github:octokit/rest.js",
-    "@actions/http-client": ">=1.0.8"
+    "@actions/github": "^6.0.1",
+    "@actions/http-client": ">=1.0.8",
+    "@octokit/core": "^7.0.2",
+    "@octokit/rest": "^19.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.23",
+    "typescript": "^5.8.3"
   }
 }
