@@ -1,84 +1,97 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var core = __importStar(require("@actions/core"));
-var github = __importStar(require("@actions/github"));
-var github_client_wrapper_1 = require("./github_client_wrapper");
-var fast_forward_action_1 = require("./fast_forward_action");
-function run() {
-    return __awaiter(this, void 0, void 0, function () {
-        var github_token, success_message, failure_message, failure_message_same_stage_and_prod, failure_message_diff_stage_and_prod, comment_messages, update_status, set_status, prod_branch, stage_branch, client, fastForward, ff_status;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    github_token = core.getInput('GITHUB_TOKEN');
-                    success_message = core.getInput('success_message') || "Fast-forward Succeeded!";
-                    failure_message = core.getInput('failure_message') || "Fast-forward Failed!";
-                    failure_message_same_stage_and_prod = core.getInput('failure_message_same_stage_and_prod') || failure_message;
-                    failure_message_diff_stage_and_prod = core.getInput('failure_message_diff_stage_and_prod') || failure_message;
-                    comment_messages = {
-                        success_message: success_message,
-                        failure_message: failure_message,
-                        failure_message_same_stage_and_prod: failure_message_same_stage_and_prod,
-                        failure_message_diff_stage_and_prod: failure_message_diff_stage_and_prod
-                    };
-                    update_status = core.getInput('update_status');
-                    set_status = update_status === 'true' ? true : false;
-                    prod_branch = core.getInput('production_branch') || 'master';
-                    stage_branch = core.getInput('staging_branch') || 'staging';
-                    client = new github_client_wrapper_1.GitHubClientWrapper(github.context, github_token);
-                    fastForward = new fast_forward_action_1.FastForwardAction(client);
-                    return [4 /*yield*/, fastForward.async_merge_fast_forward(client, set_status)];
-                case 1:
-                    ff_status = _a.sent();
-                    return [4 /*yield*/, fastForward.async_comment_on_pr(client, comment_messages, ff_status, prod_branch, stage_branch)];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+const core = __importStar(require("@actions/core"));
+const github = __importStar(require("@actions/github"));
+const github_client_wrapper_1 = require("./github_client_wrapper");
+const fast_forward_action_1 = require("./fast_forward_action");
+async function run() {
+    try {
+        const github_token = core.getInput('GITHUB_TOKEN');
+        const octokit = github.getOctokit(github_token);
+        const context = github.context;
+        const client = new github_client_wrapper_1.GitHubClientWrapper(github_token);
+        const fastForward = new fast_forward_action_1.FastForwardAction(client);
+        const success_message = core.getInput('success_message') || "Fast-forward Succeeded!";
+        const failure_message = core.getInput('failure_message') || "Fast-forward Failed!";
+        const failure_message_same_stage_and_prod = core.getInput('failure_message_same_stage_and_prod') || failure_message;
+        const failure_message_diff_stage_and_prod = core.getInput('failure_message_diff_stage_and_prod') || failure_message;
+        const comment_messages = {
+            success_message,
+            failure_message,
+            failure_message_same_stage_and_prod,
+            failure_message_diff_stage_and_prod,
+            failure_message_needs_approval: "Fast-forward blocked: PR to '***target_base***' must be approved by at least one 'release-committee' member."
+        };
+        const update_status = core.getInput('update_status') === 'true';
+        const prod_branch = core.getInput('production_branch') || 'master';
+        const stage_branch = core.getInput('staging_branch') || 'staging';
+        const { issue, repository } = context.payload;
+        if (!issue?.pull_request) {
+            core.info('Not a pull request comment. Skipping...');
+            return;
+        }
+        const { owner, repo } = context.repo;
+        const pr_number = issue.number;
+        const pull = await octokit.rest.pulls.get({
+            owner,
+            repo,
+            pull_number: pr_number
         });
-    });
+        const base_branch = pull.data.base.ref;
+        const needs_release_approval = ['master', 'main', 'develop'].includes(base_branch);
+        if (needs_release_approval) {
+            const approvers = await client.list_pull_request_approvers(pr_number);
+            const teamMembers = await client.list_team_members(owner, 'release-committee');
+            const isApprovedByTeam = approvers.some(a => teamMembers.includes(a));
+            core.info(`Base branch is '${base_branch}', which requires release-committee approval.`);
+            core.info(`Approved by release-committee member? ${isApprovedByTeam}`);
+            if (!isApprovedByTeam) {
+                core.setFailed(`Fast-forward blocked: PR to '${base_branch}' must be approved by at least one 'release-committee' member.`);
+                await fastForward.async_comment_on_pr(comment_messages, false, prod_branch, stage_branch, 'missing_approval');
+                return;
+            }
+        }
+        else {
+            core.info(`Base branch is '${base_branch}', no special approval required.`);
+        }
+        const ff_status = await fastForward.async_merge_fast_forward(update_status);
+        await fastForward.async_comment_on_pr(comment_messages, ff_status, prod_branch, stage_branch);
+    }
+    catch (error) {
+        core.setFailed(error instanceof Error ? error.message : JSON.stringify(error));
+    }
 }
 run();
